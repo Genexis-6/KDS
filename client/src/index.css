@@ -24,9 +24,8 @@ a:hover {
 
 body {
   margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
+  padding: 0px;
+  box-sizing: border-box;
   min-height: 100vh;
 }
 
@@ -46,9 +45,8 @@ button {
   cursor: pointer;
   transition: border-color 0.25s;
 }
-button:hover {
-  border-color: #646cff;
-}
+
+
 button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
