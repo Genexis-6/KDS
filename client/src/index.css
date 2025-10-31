@@ -18,6 +18,7 @@ a {
   color: #646cff;
   text-decoration: inherit;
 }
+
 a:hover {
   color: #535bf2;
 }
@@ -57,10 +58,29 @@ button:focus-visible {
     color: #213547;
     background-color: #ffffff;
   }
+
   a:hover {
     color: #747bff;
   }
+
   button {
     background-color: #f9f9f9;
   }
+}
+
+
+.error-text {
+  display: block;
+  font-size: 0.85rem;
+  color: #dc3545;
+  opacity: 0;
+  max-height: 0;
+  transform: translateY(-5px);
+  transition: all 0.3s ease;
+}
+
+.error-text.show {
+  opacity: 1;
+  max-height: 50px;
+  transform: translateY(0);
 }

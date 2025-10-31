@@ -7,6 +7,7 @@ class Settings(BaseSettings):
     DATABASE_URL: str
     APP_NAME:str
     PORT:int
+    SK:str
     ALGO:str
     SettingsConfigDict(env_file="../.env")
     

@@ -9,7 +9,8 @@ class ClassModel(Base):
     __tablename__ = "classes"
 
     id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    title: Mapped[str] = mapped_column(String(100), index=True, unique=True)
+    class_name: Mapped[str] = mapped_column(String(100), index=True, unique=True)
+    teacher_name:Mapped[str] = mapped_column(String(200), index=True)
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.now)
 
     # One-to-many relationship
