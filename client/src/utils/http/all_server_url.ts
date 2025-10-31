@@ -9,6 +9,7 @@ export class AllServerUrls{
     static login: string = `${AllServerUrls.backendUrl}/auth/login`
     static getRefreshToken:string = `${AllServerUrls.backendUrl}/auth/refresh_token`
     static currentUser:string = `${AllServerUrls.backendUrl}/auth/current_user`
+    static logout:string = `${AllServerUrls.backendUrl}/auth/logout`
    
     
 // all url relating to classess

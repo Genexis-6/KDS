@@ -17,15 +17,20 @@ export const useIsAuthenticatedStore = create<UseIsAuthenticatedParams>((set, ge
   isAuthenticated: sessionStorage.getItem(KEY) === "true",
   isChecking: false,
 
-  
+
   checkIsAuthenticated: async () => {
     set({ isChecking: true });
+
+    if (!get().isAuthenticated) {
+      set({ isChecking: false });
+      return;
+    }
 
     try {
       const { getAcessToken, token } = useAuthTokenStore.getState();
       const { getUser, user } = useCurrentUserStore.getState();
 
-   
+
       let accessToken = token;
       if (!accessToken) {
         await getAcessToken();

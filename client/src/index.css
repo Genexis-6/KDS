@@ -84,3 +84,8 @@ button:focus-visible {
   max-height: 50px;
   transform: translateY(0);
 }
+
+.default-page{
+  height: calc(100vh - 56px)!important;
+
+}

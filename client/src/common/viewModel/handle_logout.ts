@@ -1,0 +1,21 @@
+import { useCurrentUserStore } from "../../utils/hooks/use_current_user";
+import { useIsAuthenticatedStore } from "../../utils/hooks/use_is_authenticated_store";
+import { useNavigationStore } from "../../utils/hooks/use_navigation_store";
+import { useNotificationStore } from "../../utils/hooks/use_notification_store";
+import { AllServerUrls } from "../../utils/http/all_server_url";
+import { DefaultRequestSetUp } from "../../utils/http/default_request_set_up";
+import { AppUrl } from "../routes/app_urls";
+
+export default async function HandleLogout() {
+    const { setUser } = useCurrentUserStore.getState();
+    const { logout, setIsAuthenticatedStatus } = useIsAuthenticatedStore.getState();
+    const { showNotification } = useNotificationStore.getState()
+    const { navigate } = useNavigationStore.getState()
+    var res = await DefaultRequestSetUp.get({ url: AllServerUrls.logout })
+
+    logout();
+    setUser(null);
+    setIsAuthenticatedStatus(false);
+    navigate(AppUrl.login)
+    showNotification(res.message, "success")
+}

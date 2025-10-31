@@ -3,6 +3,9 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { NavigationSync } from "../component/navigation_sync";
 import { AppUrl } from "./app_urls";
 import Login from "../../features/auth/view/pages/Login";
+import NavbarLayout from "../component/NavBarLayout";
+import ExamSelection from "../../features/dashboard/students/ExamSelection";
+import ProtectedRoute from "../component/ProtectedRoutes";
 
 export default function MainRoute() {
     return <>
@@ -10,8 +13,16 @@ export default function MainRoute() {
         <BrowserRouter>
             <NavigationSync />
             <Routes >
-                <Route path={AppUrl.login} element={<Login />}/>
+                <Route path={AppUrl.login} element={<Login />} />
+
+                <Route element={<ProtectedRoute />}>
+                    <Route element={<NavbarLayout />}>
+                        <Route path={AppUrl.examSelectionUrl} element={<ExamSelection />} />
+                    </Route>
+                </Route>
             </Routes>
+
+
         </BrowserRouter>
     </>
 }

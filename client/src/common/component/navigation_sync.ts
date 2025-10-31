@@ -1,7 +1,7 @@
 // src/components/NavigationSync.tsx
 import { useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { useNavigationStore } from "../../utils/hooks/use_navogation_store";
+import { useNavigationStore } from "../../utils/hooks/use_navigation_store";
 
 
 export const NavigationSync = () => {

@@ -140,3 +140,11 @@ async def refresh_token(request:Request):
         
         
         
+
+@auth.get("/logout", response_model=DefaultServerApiRes)
+async def logout(response: Response):
+    response.delete_cookie("refresh_token", path="/", samesite="none", secure=True, httponly=True)
+    return DefaultServerApiRes(
+        statusCode=200,
+        message="user have successfully logged out"
+    )
