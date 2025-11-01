@@ -1,6 +1,10 @@
 import { create } from "zustand";
 import { useCurrentUserStore } from "./use_current_user";
 import { useAuthTokenStore } from "./use_auth_token_store";
+import { useStudentInfoStore } from "./use_student_info_store";
+import { useAllSubjects } from "./use_all_subjects";
+
+
 
 
 const KEY = "isAuthenticated";
@@ -29,6 +33,9 @@ export const useIsAuthenticatedStore = create<UseIsAuthenticatedParams>((set, ge
     try {
       const { getAcessToken, token } = useAuthTokenStore.getState();
       const { getUser, user } = useCurrentUserStore.getState();
+      // const { getSubjects } = useAllSubjects.getState()
+      const { getStudentInfo } = useStudentInfoStore.getState();
+
 
 
       let accessToken = token;
@@ -42,11 +49,19 @@ export const useIsAuthenticatedStore = create<UseIsAuthenticatedParams>((set, ge
         await getUser();
       }
 
+
       const validUser = useCurrentUserStore.getState().user;
+
+
 
       // Both token and user are valid
       if (accessToken && validUser) {
         set({ isAuthenticated: true });
+        if (validUser.role === "student") {
+          await getStudentInfo()
+          await useAllSubjects.getState().getSubjects()
+   
+        }
         sessionStorage.setItem(KEY, "true");
       } else {
         //  Missing either token or user

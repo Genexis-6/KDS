@@ -4,7 +4,7 @@ import { NavigationSync } from "../component/navigation_sync";
 import { AppUrl } from "./app_urls";
 import Login from "../../features/auth/view/pages/Login";
 import NavbarLayout from "../component/NavBarLayout";
-import ExamSelection from "../../features/dashboard/students/ExamSelection";
+import ExamSelection from "../../features/dashboard/students/view/pages/ExamSelection";
 import ProtectedRoute from "../component/ProtectedRoutes";
 
 export default function MainRoute() {

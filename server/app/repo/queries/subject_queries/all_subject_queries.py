@@ -1,0 +1,63 @@
+from app.repo.schemas.subject_schemas.add_new_subject import  AddNewSubjectSchemas, ParticularSubjectSchemas, SubjectById, SubjectInfoSchemas
+from app.utils.enums.auth_enums import AuthEums
+from app.repo.queries.class_room_queries.class_queries import ClassQueries
+from ...dependecy import AsyncSession
+from ...models import SubJectModel
+from sqlalchemy import select
+from uuid import UUID, uuid4
+
+class AllSubjectQueries:
+    def __init__(self, session: AsyncSession):
+        self.session = session
+        self.class_query = ClassQueries(session)
+        
+    
+    async def check_subject_exist(self, title: str):
+        res = await self.session.execute(select(SubJectModel).where(SubJectModel.title == title))
+        output = res.scalar_one_or_none()
+        return output
+    
+    
+    async def get_all_subjects(self, class_id: UUID):
+        sub = await self.session.execute(
+            select(SubJectModel).where(SubJectModel.class_id == class_id)
+        )
+        class_ = await self.class_query.get_class_by_id(id=class_id)
+        all_sub = sub.scalars().all()
+        if class_ is None and all_sub == [] :
+            return None
+        
+        return SubjectInfoSchemas(
+            className= class_.className,
+            teacherName=class_.teacherName,
+            classId=class_.id,
+            subjects=[
+                ParticularSubjectSchemas(
+                id=sub.id,
+                title=sub.title,
+                author=sub.author,
+                enable=sub.enable,
+                classId=sub.class_id
+            )
+            for sub in all_sub 
+            ]
+        )
+    
+    
+
+   
+    async def add_new_subject(self, add:AddNewSubjectSchemas):
+        check = await self.check_subject_exist(add.title)
+        if check is None:
+            self.session.add(
+                SubJectModel(
+                    id = uuid4(),
+                    title = add.title,
+                    author = add.author,
+                    enable = add.enable,
+                    class_id = add.classId,
+                )
+            )
+            await self.session.commit()
+            return AuthEums.CREATED
+        return AuthEums.EXISTS

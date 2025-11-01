@@ -9,11 +9,13 @@ import { useAuthTokenStore } from "./utils/hooks/use_auth_token_store";
 
 
 
+
 function App() {
 
   const {
     isAuthenticated, checkIsAuthenticated
   } = useIsAuthenticatedStore()
+
 
   const { token } = useAuthTokenStore()
   const { user } = useCurrentUserStore()
@@ -26,6 +28,7 @@ function App() {
   console.log(isAuthenticated)
   console.log(user)
   console.log(token)
+
   return (
     <>
       <GlobalNotification />

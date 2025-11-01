@@ -16,4 +16,12 @@ export class AllServerUrls{
     static classUrls: string = `${AllServerUrls.backendUrl}/class`
     static getAllClassUlr:string = `${AllServerUrls.classUrls}/all_classess`
 
+
+    // al student url
+    static getStudentInfoUrl:string = `${AllServerUrls.backendUrl}/students/student_info`
+
+
+    // all subject url
+    static getAllSubjects:string = `${AllServerUrls.backendUrl}/subjects/get_all_subject`
+
 }

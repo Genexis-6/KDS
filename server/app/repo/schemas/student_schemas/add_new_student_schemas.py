@@ -6,3 +6,11 @@ class AddNewStudentSchemas(BaseModel):
     identifier:str
     class_id:UUID4
     password:str
+    
+    
+
+class StudentInfoSchemas(BaseModel):
+    fullName:str
+    identifier:str
+    classId:UUID4
+    id:UUID4  

@@ -2,7 +2,7 @@ from app.repo.schemas.class_schemas.add_new_class_schemas import AddNewClassSche
 from app.utils.enums.class_room_enums import ClassRoomEnums
 from app.repo.schemas.class_schemas.class_schemas import ClassSchemas
 from ...dependecy import AsyncSession
-from sqlalchemy import select
+from sqlalchemy import UUID, select
 from ...models import ClassModel
 from uuid import uuid4
 
@@ -16,6 +16,17 @@ class ClassQueries:
         res = await self.session.execute(select(ClassModel).where(ClassModel.class_name == class_name))
         output = res.scalar_one_or_none()
         return output
+    
+    async def get_class_by_id(self, id: UUID):
+        res = await self.session.execute(select(ClassModel).where(ClassModel.id == id))
+        output = res.scalar_one_or_none()
+        if output is None:
+            return None
+        return ClassSchemas(
+            id=output.id,
+            className=output.class_name,
+            teacherName=output.teacher_name
+        )
         
     async def get_all_classes(self):
         res = await self.session.execute(select(ClassModel))

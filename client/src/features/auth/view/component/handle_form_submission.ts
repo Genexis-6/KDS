@@ -9,6 +9,7 @@ import { useIsAuthenticatedStore } from "../../../../utils/hooks/use_is_authenti
 import { useCurrentUserStore } from "../../../../utils/hooks/use_current_user"
 import { useNavigationStore } from "../../../../utils/hooks/use_navigation_store"
 import { AppUrl } from "../../../../common/routes/app_urls"
+import { useStudentInfoStore } from "../../../../utils/hooks/use_student_info_store"
 
 
 type loginParams<T extends FieldValues> = {
@@ -31,6 +32,7 @@ export class HandleFormSubmission {
         const {getUser} = useCurrentUserStore.getState()
         const {navigate} = useNavigationStore.getState()
         const {setIsAuthenticatedStatus} = useIsAuthenticatedStore.getState()
+        const {getStudentInfo} = useStudentInfoStore.getState()
         const userData = new LoginModel(data);
         const res = await DefaultRequestSetUp.post<LoginModel, loginResInterface>({
             data: userData, url: AllServerUrls.login,
@@ -47,6 +49,8 @@ export class HandleFormSubmission {
         else if (res.statusCode === 200) {
             setToken(res.data.accessToken);
             setIsAuthenticatedStatus(true)
+
+            if(data.role === "student") await getStudentInfo()
             await getUser()
             showNotification(res.message, "success")
 

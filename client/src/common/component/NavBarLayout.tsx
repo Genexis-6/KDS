@@ -66,7 +66,7 @@ export default function NavbarLayout() {
       </nav>
 
       {/* Page Content */}
-      <main className="flex-grow-1 p-4 bg-light h-100 default-page">
+      <main>
         <Outlet />
       </main>
     </>
