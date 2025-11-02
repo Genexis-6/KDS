@@ -15,6 +15,12 @@ type getParams = {
 }
 
 
+type deleteParams<T> = {
+    url: string;
+    data?: T;
+    contentType?: string;
+    token?: string;
+};
 
 
 export class DefaultRequestSetUp {
@@ -82,6 +88,38 @@ export class DefaultRequestSetUp {
         } catch (e) {
             showNotification("error communicating with server... call technical team", "error")
             throw (e)
+        }
+    }
+
+    static async delete<TModel, TRes>({
+        url,
+        data,
+        contentType = "application/json",
+        token,
+    }: deleteParams<TModel>): Promise<DefaultServerRes<TRes>> {
+        const { showNotification } = useNotificationStore.getState();
+        try {
+            const res = await fetch(url, {
+                method: "DELETE",
+                credentials: "include",
+                headers: DefaultRequestSetUp.headerType({ contentType, token }),
+                body: data ? JSON.stringify(data) : undefined,
+            });
+
+            const resData = (await res.json()) as TRes;
+
+            if (res.status === 500) {
+                showNotification("Error performing delete request", "error");
+                console.error(await res.text());
+            }
+
+            return {
+                ...(resData as object),
+                statusCode: (resData as any).status_code ?? res.status,
+            } as DefaultServerRes<TRes>;
+        } catch (e) {
+            showNotification("Error communicating with server... call technical team", "error");
+            throw e;
         }
     }
 

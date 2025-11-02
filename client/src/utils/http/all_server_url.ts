@@ -1,42 +1,44 @@
-export class AllServerUrls{
+export class AllServerUrls {
 
-    static backendUrl:string = "http://127.0.0.1:8000"
+    static backendUrl: string = "http://127.0.0.1:8000"
 
 
 
 
     // auth url
     static login: string = `${AllServerUrls.backendUrl}/auth/login`
-    static getRefreshToken:string = `${AllServerUrls.backendUrl}/auth/refresh_token`
-    static currentUser:string = `${AllServerUrls.backendUrl}/auth/current_user`
-    static logout:string = `${AllServerUrls.backendUrl}/auth/logout`
-   
-    
-// all url relating to classess
+    static getRefreshToken: string = `${AllServerUrls.backendUrl}/auth/refresh_token`
+    static currentUser: string = `${AllServerUrls.backendUrl}/auth/current_user`
+    static logout: string = `${AllServerUrls.backendUrl}/auth/logout`
+
+
+    // all url relating to classess
     static classUrls: string = `${AllServerUrls.backendUrl}/class`
-    static getAllClassUlr:string = `${AllServerUrls.classUrls}/all_classess`
+    static getAllClassUlr: string = `${AllServerUrls.classUrls}/all_classess`
+    static addNewClass: string = `${AllServerUrls.classUrls}/add_class`
+    static deleteClass:string = `${AllServerUrls.classUrls}/delete_class`
 
 
     // al student url
-    static getStudentInfoUrl:string = `${AllServerUrls.backendUrl}/students/student_info`
+    static getStudentInfoUrl: string = `${AllServerUrls.backendUrl}/students/student_info`
 
 
     // all subject url
-    static getAllSubjects:string = `${AllServerUrls.backendUrl}/subjects/get_all_subject`
+    static getAllSubjects: string = `${AllServerUrls.backendUrl}/subjects/get_all_subject`
 
 
 
     // all time url
-    static getExamTime:string = `${AllServerUrls.backendUrl}/timer/get_exam_time`
+    static getExamTime: string = `${AllServerUrls.backendUrl}/timer/get_exam_time`
 
 
 
     // all question url
-    static getAllQuestion:string = `${AllServerUrls.backendUrl}/question/get_questions`
-    
+    static getAllQuestion: string = `${AllServerUrls.backendUrl}/question/get_questions`
 
 
-    static checkProceedExam:string =  `${AllServerUrls.backendUrl}/score/check_proceed_exam`
-    static submitExam:string = `${AllServerUrls.backendUrl}/score/submit_exam_result`
+
+    static checkProceedExam: string = `${AllServerUrls.backendUrl}/score/check_proceed_exam`
+    static submitExam: string = `${AllServerUrls.backendUrl}/score/submit_exam_result`
 
 }

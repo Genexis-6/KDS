@@ -29,10 +29,10 @@ export class HandleFormSubmission {
     static async login({ data, setError }: loginParams<FormValues>) {
         const { showNotification } = useNotificationStore.getState()
         const { setToken } = useAuthTokenStore.getState()
-        const {getUser} = useCurrentUserStore.getState()
-        const {navigate} = useNavigationStore.getState()
-        const {setIsAuthenticatedStatus} = useIsAuthenticatedStore.getState()
-        const {getStudentInfo} = useStudentInfoStore.getState()
+        const { getUser } = useCurrentUserStore.getState()
+        const { navigate } = useNavigationStore.getState()
+        const { setIsAuthenticatedStatus } = useIsAuthenticatedStore.getState()
+        const { getStudentInfo } = useStudentInfoStore.getState()
         const userData = new LoginModel(data);
         const res = await DefaultRequestSetUp.post<LoginModel, loginResInterface>({
             data: userData, url: AllServerUrls.login,
@@ -50,10 +50,9 @@ export class HandleFormSubmission {
             setToken(res.data.accessToken);
             setIsAuthenticatedStatus(true)
             await getUser()
-            if(data.role === "student") await getStudentInfo()
+            if (data.role === "student") await getStudentInfo()
             showNotification(res.message, "success")
-
-            navigate(AppUrl.examSelectionUrl)
+            navigate(data.role === "admin" ? AppUrl.adminPath : AppUrl.examSelectionUrl)
         }
     }
 }

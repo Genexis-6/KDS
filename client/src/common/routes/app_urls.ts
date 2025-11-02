@@ -5,4 +5,7 @@ export class AppUrl{
     static examSelectionUrl:string ="/exam-selection"
     static examPreparation: string ="/exam-preparation"
     static startExam:string = "/exam-start"
+
+
+    static adminPath:string = "/admin"
 }

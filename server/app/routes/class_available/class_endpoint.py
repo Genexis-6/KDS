@@ -1,11 +1,12 @@
-from fastapi import APIRouter
+from uuid import UUID
+from fastapi import APIRouter, Query
 from fastapi.responses import JSONResponse
 from app.repo.schemas.default_server_res import DefaultServerApiRes
 from app.repo import db_injection
 from app.repo.queries.class_room_queries.class_queries import ClassQueries
 from app.repo.schemas.class_schemas.add_new_class_schemas import AddNewClassSchemas
 from app.utils.enums.class_room_enums import ClassRoomEnums
-from typing import List
+from typing import Annotated, List
 from app.repo.schemas.class_schemas.class_schemas import ClassSchemas
 
 
@@ -44,6 +45,21 @@ async def add_new_class(db: db_injection, add:AddNewClassSchemas):
         )
     return DefaultServerApiRes(
         statusCode=200,
-        message=f"{add.class_name} has been created"
+        message=f"{add.className} has been created"
+    )
+    
+    
+@room.delete("/delete_class", response_model=DefaultServerApiRes)
+async def delete_class(db: db_injection, className: Annotated[str, Query(..., description="class id")]):
+    class_ =  ClassQueries(db)
+    delete_class = await class_.delete_class(className)
+    if delete_class == ClassRoomEnums.NOT_FOUND:
+        return JSONResponse(
+            content={"message":"no class with this id exsited"},
+            status_code= 400
+        )
+    return DefaultServerApiRes(
+        statusCode=200,
+        message="class was deleted successfully"
     )
     

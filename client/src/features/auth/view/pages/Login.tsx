@@ -1,7 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { Eye, EyeClosed, User, UserCheck } from "lucide-react";
 import { HandleFormSubmission } from "../component/handle_form_submission";
+import { useIsAuthenticatedStore } from "../../../../utils/hooks/use_is_authenticated_store";
+import { useNavigationStore } from "../../../../utils/hooks/use_navigation_store";
+import { useCurrentUserStore } from "../../../../utils/hooks/use_current_user";
+import { AppUrl } from "../../../../common/routes/app_urls";
 
 export type userRole = "student" | "admin";
 export type FormValues = {
@@ -13,11 +17,26 @@ export type FormValues = {
 const Login: React.FC = () => {
     const { register, handleSubmit, setError, formState: { isSubmitting, errors } } = useForm<FormValues>();
     const [isVisible, setIsVisible] = useState(false);
+    const { isAuthenticated } = useIsAuthenticatedStore()
+    const { navigate } = useNavigationStore()
+    const { user } = useCurrentUserStore()
     const [role, setRole] = useState<userRole>("student");
 
     const onSubmit: SubmitHandler<FormValues> = async (data) => {
         await HandleFormSubmission.login({ data, setError });
     };
+
+    useEffect(
+        () => {
+            if (isAuthenticated) {
+                if (user?.role === "admin") {
+                    navigate(AppUrl.adminPath)
+                } else {
+                    navigate(AppUrl.examSelectionUrl)
+                }
+            }
+        }, []
+    )
 
     return (
         <div className="d-flex justify-content-center align-items-center vh-100 bg-light position-relative">

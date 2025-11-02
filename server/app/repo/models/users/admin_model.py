@@ -9,6 +9,6 @@ from datetime import datetime
 class AdminModel(Base):
     __tablename__ = "admin"
     id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    name: Mapped[str] = mapped_column(String(100), index=True, unique=True)
+    full_name: Mapped[str] = mapped_column(String(100), index=True, unique=True)
     identifier:Mapped[str] = mapped_column(String(100), index=True, unique=True)
     password: Mapped[str] = mapped_column(String(100), index=True)

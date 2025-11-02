@@ -3,6 +3,7 @@
 import { Outlet, Link } from "react-router-dom";
 import { useCurrentUserStore } from "../../utils/hooks/use_current_user";
 import HandleLogout from "../viewModel/handle_logout";
+import { AppUrl } from "../routes/app_urls";
 
 export default function NavbarLayout() {
   const { user } = useCurrentUserStore();
@@ -35,23 +36,41 @@ export default function NavbarLayout() {
           {/* Collapsible Menu */}
           <div className="collapse navbar-collapse" id="navbarContent">
             <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-              <li className="nav-item">
-                <Link className="nav-link text-dark" to="/dashboard">
-                  Dashboard
-                </Link>
-              </li>
-              <li className="nav-item">
-                <Link className="nav-link text-dark" to="/profile">
-                  Profile
-                </Link>
-              </li>
+              {
+                user?.role === "admin" && <li className="nav-item">
+                  <Link className="nav-link text-dark" to={AppUrl.adminPath}>
+                    All class
+                  </Link>
+                </li>
+              }
+              {
+                user?.role === "admin" && <li className="nav-item">
+                  <Link className="nav-link text-dark" to="/dashboard">
+                    Setup Exam
+                  </Link>
+                </li>
+              }
+              {
+                user?.role === "admin" && <li className="nav-item">
+                  <Link className="nav-link text-dark" to="/dashboard">
+                    View all Student
+                  </Link>
+                </li>
+              }
+              {
+                user?.role === "admin" && <li className="nav-item">
+                  <Link className="nav-link text-dark" to="/dashboard">
+                    Register student
+                  </Link>
+                </li>
+              }
             </ul>
 
             {/* Right Side: User + Logout */}
             <div className="d-flex align-items-center gap-3">
               {user && (
                 <span className="text-dark small bg-light px-3 py-1 rounded-pill border">
-                  {user.fullName}
+                  <b>{user.role === "admin" && `Admin: `}</b>{user.fullName}
                 </span>
               )}
               <button

@@ -43,15 +43,24 @@ class ClassQueries:
     
     
     async def add_new_class(self, add:AddNewClassSchemas):
-        check = await self.check_class_exist(add.class_name)
+        check = await self.check_class_exist(add.className)
         if check:
             return ClassRoomEnums.EXIST
         self.session.add(
             ClassModel(
                 id = uuid4(),
-                class_name= add.class_name,
-                teacher_name= add.teacher_name
+                class_name= add.className,
+                teacher_name= add.teacherName
             )
         )
         await self.session.commit()
         return ClassRoomEnums.CREATED
+    
+    async def delete_class(self, className:UUID):
+        chcck = await self.check_class_exist(className)
+        if not chcck:
+            return ClassRoomEnums.NOT_FOUND
+        await self.session.delete(chcck)
+        await self.session.commit()
+        return ClassRoomEnums.OK
+        

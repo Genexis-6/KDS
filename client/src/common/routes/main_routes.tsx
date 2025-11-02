@@ -8,6 +8,7 @@ import ExamSelection from "../../features/dashboard/students/view/pages/ExamSele
 import ProtectedRoute from "../component/ProtectedRoutes";
 import ExamPreParation from "../../features/dashboard/students/view/pages/ExamPreparation";
 import ExamScreen from "../../features/dashboard/students/view/pages/ExamScreen";
+import AdminDashBoard from "../../features/dashboard/admin/view/pages/AdminDashBoard";
 
 export default function MainRoute() {
     return <>
@@ -20,8 +21,13 @@ export default function MainRoute() {
                 <Route element={<ProtectedRoute />}>
                     <Route element={<NavbarLayout />}>
                         <Route path={AppUrl.examSelectionUrl} element={<ExamSelection />} />
-                         <Route path={AppUrl.examPreparation} element={<ExamPreParation />} />
-                         <Route path={AppUrl.startExam} element={<ExamScreen />} />
+                        <Route path={AppUrl.examPreparation} element={<ExamPreParation />} />
+                        <Route path={AppUrl.startExam} element={<ExamScreen />} />
+
+
+                        <Route path={AppUrl.adminPath}>
+                        <Route index element={<AdminDashBoard/>}/>
+                        </Route>
 
                     </Route>
                 </Route>

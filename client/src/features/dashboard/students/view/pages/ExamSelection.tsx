@@ -58,7 +58,9 @@ export default function ExamSelection() {
             <div className="col-12">
               <div className="exam-container">
                 {subjects?.subjects?.length === 0 ? (
-                  <Spinner />
+                  <>
+                    <Spinner message="up able to get questions... inform the technical team" />
+                  </>
                 ) : (
                   subjects?.subjects?.map((sub, key) => (
                     <ExamCard subject={sub} key={key} />
