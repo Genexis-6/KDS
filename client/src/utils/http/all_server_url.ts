@@ -33,5 +33,10 @@ export class AllServerUrls{
 
     // all question url
     static getAllQuestion:string = `${AllServerUrls.backendUrl}/question/get_questions`
+    
+
+
+    static checkProceedExam:string =  `${AllServerUrls.backendUrl}/score/check_proceed_exam`
+    static submitExam:string = `${AllServerUrls.backendUrl}/score/submit_exam_result`
 
 }

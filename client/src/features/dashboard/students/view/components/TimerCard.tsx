@@ -1,12 +1,18 @@
 import { useEffect } from "react";
 import { useSelectedExam } from "../../../../../utils/hooks/use_selected_exam";
+import { AllExamOperations } from "../../viewModel/allExamsOperation";
+
 
 export default function TimerCard() {
   const { remainingTime, startTimer, isTimerRunning } = useSelectedExam();
 
+
   useEffect(() => {
     if (isTimerRunning) {
-      startTimer(() => alert("⏰ Time’s up! Submitting exam..."));
+      startTimer(async () => {
+        await AllExamOperations.submitExam({message:"You where timed out", messageType:"info"})
+      });
+      
     }
   }, [isTimerRunning]);
 

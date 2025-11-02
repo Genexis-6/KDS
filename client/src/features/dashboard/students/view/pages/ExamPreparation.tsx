@@ -7,16 +7,26 @@ import { useAllSubjects } from "../../../../../utils/hooks/use_all_subjects";
 import { useStudentInfoStore } from "../../../../../utils/hooks/use_student_info_store";
 import { usePopupStore } from "../../../../../utils/hooks/use_pop_up_menu";
 import { AllExamOperations } from "../../viewModel/allExamsOperation";
+// import { useExamStarted } from "../../../../../utils/hooks/use_exam_started";
 
 export default function ExamPreParation() {
   const {
-    selectedExam, timer, allAvaliableQuestions
+    selectedExam, timer, isTimerRunning,  allAvaliableQuestions, clear, getExamStats, getAllAvaliableQuestions
   } = useSelectedExam()
   const { navigate } = useNavigationStore()
   const { subjects } = useAllSubjects()
   const { student } = useStudentInfoStore()
   const { showNotification } = useNotificationStore()
-  const {openPopup, closePopup} = usePopupStore()
+  const { openPopup, closePopup } = usePopupStore()
+  //  const { state } = useExamStarted()
+
+  useEffect(
+    ()=>{
+      getExamStats().then()
+      getAllAvaliableQuestions().then()
+    }, []
+  )
+
   useEffect(
     () => {
       if (selectedExam === null) {
@@ -27,8 +37,15 @@ export default function ExamPreParation() {
     }, [
     selectedExam
   ]
-
   )
+
+      useEffect(
+        () => {
+            if (isTimerRunning) {
+                navigate(AppUrl.startExam)
+            }
+        }, [isTimerRunning]
+    )
   console.log(allAvaliableQuestions)
   return (
     <div className="exam-container mt-4">
@@ -77,12 +94,17 @@ export default function ExamPreParation() {
 
       {/* Buttons */}
       <div className="w-100 d-flex justify-content-between mt-auto">
-        <button className="btn btn-outline-secondary px-4" onClick={() => { navigate(AppUrl.examSelectionUrl) }}>← Back</button>
-        <button className="btn btn-primary px-4" onClick={()=>{
+        <button className="btn btn-outline-secondary px-4" onClick={() => { 
+          navigate(AppUrl.examSelectionUrl) 
+          setTimeout(() => {
+            clear()
+          }, 300);
+          }}>← Back</button>
+        <button className="btn btn-primary px-4" onClick={() => {
           openPopup({
             title: "Confirm Action",
             message: "Once you start the exam, you cannot go back!",
-            onContinue: () => AllExamOperations.startExam(),
+            onContinue: async () => await AllExamOperations.startExam(),
             onCancel: () => closePopup(),
           })
         }}>Proceed →</button>

@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { SubjectModel } from "../../common/model/classModels/subject_model";
+import { ProceedExam, SubjectModel } from "../../common/model/classModels/subject_model";
 import type { TimerModel } from "../../common/model/classModels/timer_model";
 import { useIsAuthenticatedStore } from "./use_is_authenticated_store";
 import { useAuthTokenStore } from "./use_auth_token_store";
@@ -9,6 +9,11 @@ import { AllServerUrls } from "../http/all_server_url";
 import { AppUrl } from "../../common/routes/app_urls";
 import { useNavigationStore } from "./use_navigation_store";
 import type { QuestionModel } from "../../common/model/classModels/QuestionModel";
+import { useStudentInfoStore } from "./use_student_info_store";
+import { useExamStarted } from "./use_exam_started";
+
+
+
 
 type UseSelectedExam = {
   allAvaliableQuestions: QuestionModel[] | null;
@@ -18,6 +23,7 @@ type UseSelectedExam = {
   remainingTime: number;
   isTimerRunning: boolean;
   currentQuestionIndex: number
+  proceedExam: () => Promise<boolean>
   setCurrentQuestionIndex: (index: number) => void
   nextQuestion: () => void
   prevQuestion: () => void
@@ -67,6 +73,25 @@ export const useSelectedExam = create<UseSelectedExam>((set, get) => ({
   })(),
 
   isLoading: false,
+proceedExam: async () => {
+  set({ isLoading: true });
+  try {
+    const { token } = useAuthTokenStore.getState();
+    const { isAuthenticated } = useIsAuthenticatedStore.getState();
+    const { selectedExam } = get();
+    const { student } = useStudentInfoStore.getState();
+
+    if (!token || !student?.id || !isAuthenticated || !selectedExam) {
+      console.warn("Not able to check QA status");
+      return false;
+    }
+
+    const dt = new ProceedExam({ subId: selectedExam.id, studId: student.id });
+    return await requestProceedExam({ token, data: dt });
+  } finally {
+    set({ isLoading: false });
+  }
+},
 
   remainingTime: (() => {
     const storedTime = Number(sessionStorage.getItem(TIMER_KEY)) || 0;
@@ -88,7 +113,6 @@ export const useSelectedExam = create<UseSelectedExam>((set, get) => ({
     const { isAuthenticated } = useIsAuthenticatedStore.getState();
     const { token } = useAuthTokenStore.getState();
     const { selectedExam } = get();
-    if (get().allAvaliableQuestions !== null) return
     if (!isAuthenticated) return console.warn("Student not authenticated!");
 
     try {
@@ -100,7 +124,7 @@ export const useSelectedExam = create<UseSelectedExam>((set, get) => ({
       }
 
     } catch (e) {
-
+      console.error("an error occured while getting question: ", e)
     } finally {
       set({ isLoading: false })
     }
@@ -143,6 +167,7 @@ export const useSelectedExam = create<UseSelectedExam>((set, get) => ({
     // ✅ Mark timer as running (persistent)
     sessionStorage.setItem(RUNNING_KEY, "true");
     set({ isTimerRunning: true });
+    useExamStarted.getState().setState(true)
 
     timerInterval = setInterval(() => {
       const { remainingTime } = get();
@@ -155,6 +180,7 @@ export const useSelectedExam = create<UseSelectedExam>((set, get) => ({
         sessionStorage.removeItem(RUNNING_KEY);
 
         set({ remainingTime: 0, isTimerRunning: false });
+        useExamStarted.getState().setState(false)
 
         if (onTimeUp) onTimeUp();
         return;
@@ -216,6 +242,8 @@ export const useSelectedExam = create<UseSelectedExam>((set, get) => ({
     sessionStorage.removeItem(LAST_UPDATE_KEY);
     sessionStorage.removeItem(TIMER_OBJECT_KEY);
     sessionStorage.removeItem(RUNNING_KEY);
+    sessionStorage.removeItem(ALLQUESTIONS)
+    sessionStorage.removeItem(CURRENT_QUESTION_KEY)
 
     set({
       selectedExam: null,
@@ -264,5 +292,17 @@ async function requestQuestions({ token, subjectId }: { token: string, subjectId
     return null
   }
 
+  return res.data
+}
+
+
+
+async function requestProceedExam({token, data}:{token:string, data:ProceedExam}) {
+  var res = await DefaultRequestSetUp.post<ProceedExam, boolean>({url:AllServerUrls.checkProceedExam, token:token, data:data})
+  console.log(res)
+  if(res.statusCode === 400){
+    useNotificationStore.getState().showNotification(res.message, "error")
+  
+  }
   return res.data
 }

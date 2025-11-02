@@ -10,7 +10,7 @@ from app.repo.schemas.default_server_res import DefaultServerApiRes
 from app.utils.enums.auth_enums import AuthEums
 from app.security.token_generator import verify_token
 from app.repo.queries.subject_queries.all_question_queries import AllQuestionQueries
-from app.repo.schemas.subject_schemas.all_questions_schemas import GetQuestionSchemas
+from app.repo.schemas.subject_schemas.all_questions_schemas import GetQuestionSchemas, SubmittedQ, SubmittedQuestions
 
 
 question_endpoint = APIRouter(
@@ -77,6 +77,7 @@ async def upload_questions(
 @question_endpoint.get("/get_questions", response_model=DefaultServerApiRes[List[GetQuestionSchemas]])
 async def get_questions(
      db: db_injection,
+    current_user: Annotated[dict, Depends(verify_token)],
     subject_id: UUID = Query(..., description="Subject ID to fetch questions for"),
    
 ):
@@ -94,3 +95,5 @@ async def get_questions(
             content={"message":"error while getting questions"},
             status_code=500,
         )
+        
+

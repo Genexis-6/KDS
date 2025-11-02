@@ -20,5 +20,6 @@ export default async function HandleLogout() {
     setIsAuthenticatedStatus(false);
     navigate(AppUrl.login)
     clear()
+    sessionStorage.clear()
     showNotification(res.message, "success")
 }

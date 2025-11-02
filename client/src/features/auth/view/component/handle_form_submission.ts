@@ -49,9 +49,8 @@ export class HandleFormSubmission {
         else if (res.statusCode === 200) {
             setToken(res.data.accessToken);
             setIsAuthenticatedStatus(true)
-
-            if(data.role === "student") await getStudentInfo()
             await getUser()
+            if(data.role === "student") await getStudentInfo()
             showNotification(res.message, "success")
 
             navigate(AppUrl.examSelectionUrl)

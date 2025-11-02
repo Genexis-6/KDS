@@ -23,3 +23,13 @@ export class SubjectModel {
 
 
 
+export class ProceedExam {
+    public subjectId: string
+    public studentId: string
+
+    constructor({ subId, studId }: { subId: string, studId: string }) {
+        this.studentId = studId
+        this.subjectId = subId
+    }
+}
+

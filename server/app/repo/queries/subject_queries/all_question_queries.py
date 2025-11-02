@@ -3,8 +3,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.repo.models import QuestionModel
 from uuid import UUID, uuid4
 from app.utils.enums.auth_enums import AuthEums
-from app.repo.schemas.subject_schemas.all_questions_schemas import GetQuestionSchemas
-
+from app.repo.schemas.subject_schemas.all_questions_schemas import GetQuestionSchemas, SubmittedQ
+from random import shuffle
 class AllQuestionQueries:
     def __init__(self, session: AsyncSession):
         self.session = session
@@ -14,12 +14,12 @@ class AllQuestionQueries:
             questions = [
                 QuestionModel(
                     id=uuid4(),
-                    question=row["Questions"],
-                    a_=row["a"],
-                    b_=row["b"],
-                    c_=row["c"],
-                    d_=row["d"],
-                    answer=row["answers"],
+                    question=str(row["Questions"]).strip(),
+                    a_=str(row["a"]).strip(),
+                    b_=str(row["b"]).strip(),
+                    c_=str(row["c"]).strip(),
+                    d_=str(row["d"]).strip(),
+                    answer=str(row["answers"]).strip(),
                     subject_id=subject_id,
                 )
                 for _, row in data.iterrows()
@@ -35,11 +35,22 @@ class AllQuestionQueries:
             print("❌ add_question error:", e)
             return AuthEums.ERROR
         
-    
-    async def get_questions(self, subject_id: UUID):
+    async def get_only_id_and_answer(self, subject_id:UUID):
             stmt = await self.session.execute(select(QuestionModel).where(QuestionModel.subject_id == subject_id))
             rows = stmt.scalars().all()
             return [
+                SubmittedQ(
+                    id=row.id,
+                    answer=row.answer
+                )
+                  
+                for row in rows
+            ]
+              
+    async def get_questions(self, subject_id: UUID):
+            stmt = await self.session.execute(select(QuestionModel).where(QuestionModel.subject_id == subject_id))
+            rows = stmt.scalars().all()
+            dt = [
                 GetQuestionSchemas(
                     id=row.id,
                     question=row.question,
@@ -50,6 +61,8 @@ class AllQuestionQueries:
                   
                 for row in rows
             ]
+            shuffle(dt)
+            return dt
             
     async def clear_old_question(self, subject_id: UUID):
         stmt = await self.session.execute(select(QuestionModel).where(QuestionModel.subject_id == subject_id))
