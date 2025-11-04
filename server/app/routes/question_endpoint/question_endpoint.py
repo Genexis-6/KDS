@@ -25,6 +25,7 @@ REQUIRED_COLUMNS = ["Questions", "a", "b", "c", "d", "answers"]
 @question_endpoint.post("/add_question", response_model=DefaultServerApiRes[str])
 async def upload_questions(
     db: db_injection,
+    current_user:Annotated[dict, Depends(verify_token)] ,
     subject_id: Annotated[UUID, Query(..., description="Subject ID")],
     upload: UploadFile = File(...),
     
@@ -99,7 +100,9 @@ async def get_questions(
         
 
 @question_endpoint.delete("/delete_questions", response_model=DefaultServerApiRes[bool])
-async def delete_questions(db:db_injection, subjectId:Annotated[UUID, Query(..., description="delete subject by id")]):
+async def delete_questions(db:db_injection, 
+                           current_user:Annotated[dict, Depends(verify_token)] ,
+                           subjectId:Annotated[UUID, Query(..., description="delete subject by id")]):
     repo = AllQuestionQueries(db)
     delete_all = await repo.clear_old_question(subjectId)
     if delete_all == AuthEums.ERROR:

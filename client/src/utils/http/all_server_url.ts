@@ -24,6 +24,7 @@ export class AllServerUrls {
 
     // al student url
     static getStudentInfoUrl: string = `${AllServerUrls.backendUrl}/students/student_info`
+    static updateStudentPassword:string = `${AllServerUrls.backendUrl}/students/change_password`
 
 
     // all subject url

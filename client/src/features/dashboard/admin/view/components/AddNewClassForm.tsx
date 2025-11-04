@@ -20,7 +20,7 @@ export default function AddNewClassForm() {
 
   const onSubmit:SubmitHandler<ClassFormValues> = async (data) => {
     await AllAdminOperation.submitNewClassData({data: data, setError: setError})
-    console.log("Form Data:", data);
+
   };
 
   const handleCancel = () => {

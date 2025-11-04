@@ -6,6 +6,8 @@ import { AppUrl } from "../../../../../common/routes/app_urls";
 import { useNavigationStore } from "../../../../../utils/hooks/use_navigation_store";
 import { useNotificationStore } from "../../../../../utils/hooks/use_notification_store";
 import AddNewStudentToClass from "../components/AddNewStudentToClass";
+import type { StudentModels } from "../../../../../common/model/studentModels/student_model";
+import ChangePasswordForm from "../components/ChangePasswordForm";
 
 export default function ViewParticularClass() {
   const { className } = useParams<{ className: string }>();
@@ -14,6 +16,10 @@ export default function ViewParticularClass() {
   const [searchTerm, setSearchTerm] = useState("");
   const { navigate } = useNavigationStore();
   const [showAddStudentPopup, setshowAddStudentPopup] = useState(false);
+
+  const [showPasswordPopup, setShowPasswordPopup] = useState(false);
+  const [selectedStudent, setSelectedStudent] = useState<StudentModels | null>(null);
+
 
   useEffect(() => {
     if (className) {
@@ -122,6 +128,7 @@ export default function ViewParticularClass() {
                 />
               </div>
 
+
               {/* Table */}
               <div
                 className="table-responsive"
@@ -135,9 +142,10 @@ export default function ViewParticularClass() {
                   <thead className="table-light sticky-top">
                     <tr>
                       <th style={{ width: "5%" }}>#</th>
-                      <th style={{ width: "40%" }}>Student Name</th>
-                      <th style={{ width: "25%" }}>Identifier</th>
-                      <th style={{ width: "30%" }}>Class</th>
+                      <th style={{ width: "30%" }}>Student Name</th>
+                      <th style={{ width: "20%" }}>Identifier</th>
+                      <th style={{ width: "25%" }}>Class</th>
+                      <th style={{ width: "20%" }}>Actions</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -152,11 +160,23 @@ export default function ViewParticularClass() {
                             </span>
                           </td>
                           <td>{viewClassData.className}</td>
+                          <td>
+                            <button
+                              className="btn btn-sm btn-outline-secondary"
+                              onClick={() => {
+
+                                setSelectedStudent(student);
+                                setShowPasswordPopup(true);
+                              }}
+                            >
+                              Update
+                            </button>
+                          </td>
                         </tr>
                       ))
                     ) : (
                       <tr>
-                        <td colSpan={4} className="text-center text-muted py-4">
+                        <td colSpan={5} className="text-center text-muted py-4">
                           No matching students found 😕
                         </td>
                       </tr>
@@ -164,22 +184,31 @@ export default function ViewParticularClass() {
                   </tbody>
                 </table>
               </div>
+
             </div>
           </div>
         </div>
       </div>
+      {showPasswordPopup && selectedStudent && (
+        <ChangePasswordForm
+          student={selectedStudent}
+          onClose={() => setShowPasswordPopup(false)}
+          onSave={()=>{}}
+        />
+      )}
+
 
       {showAddStudentPopup && (
         <AddNewStudentToClass
-        className={viewClassData.className}
+          className={viewClassData.className}
           classId={viewClassData.classId!}
           onClose={() => setshowAddStudentPopup(false)}
-          onSave={(data) => {
-            console.log("New student:", data);
+          onSave={() => {
+
             // call your API to add student
           }}
           onUploadExcel={(file, classId) => {
-            console.log("Uploading Excel for class:", classId, file);
+
           }}
         />
       )}

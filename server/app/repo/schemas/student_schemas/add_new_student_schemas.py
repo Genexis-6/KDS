@@ -14,3 +14,10 @@ class StudentInfoSchemas(BaseModel):
     identifier:str
     classId:UUID4
     id:UUID4  
+    
+    
+
+class ChangePasswordBody(BaseModel):
+    studentId: UUID4
+    newPassword: str
+

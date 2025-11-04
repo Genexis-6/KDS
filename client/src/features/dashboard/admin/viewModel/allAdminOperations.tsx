@@ -223,11 +223,23 @@ export class AllAdminOperation {
     }
   }
 
-  static async deleteQuestions({subjectId}:{subjectId:string}){
-    var res = await DefaultRequestSetUp.delete<void, boolean>({url:`${AllServerUrls.deleteQuestion}?subjectId=${subjectId}`})
-    useNotificationStore.getState().showNotification(res.message, res.statusCode === 200 ? "success":"info")
+  static async deleteQuestions({ subjectId }: { subjectId: string }) {
+    var res = await DefaultRequestSetUp.delete<void, boolean>({ url: `${AllServerUrls.deleteQuestion}?subjectId=${subjectId}` })
+    useNotificationStore.getState().showNotification(res.message, res.statusCode === 200 ? "success" : "info")
     return res.data
   }
 
+
+  static async updateStudentPassword(studentId: string, newPassword: string) {
+    const res = await DefaultRequestSetUp.put<
+      { studentId: string; newPassword: string },
+      boolean
+    >({
+      url: AllServerUrls.updateStudentPassword,
+      data: { studentId: studentId, newPassword: newPassword },
+    })
+    useNotificationStore.getState().showNotification(res.message, res.statusCode == 200 ? "success" : "info")
+    return res
+  }
 
 }

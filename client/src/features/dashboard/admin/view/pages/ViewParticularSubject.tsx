@@ -8,6 +8,7 @@ import UploadStudentQuestion from "../components/UploadStudentQuestion";
 import { usePopupStore } from "../../../../../utils/hooks/use_pop_up_menu";
 import { AllAdminOperation } from "../../viewModel/allAdminOperations";
 import { useGenerateRecordStore } from "../../../../../utils/hooks/use_generate_records";
+import Spinner from "../../../../../common/component/Spinner";
 
 export default function ViewParticularSubject() {
   const { subjectId, subjectTitle } = useParams<{
@@ -22,7 +23,7 @@ export default function ViewParticularSubject() {
   const [showAddQuestionPopup, setShowAddQuestionPopup] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const { openPopup, closePopup } = usePopupStore.getState()
-  const {sendStudentRecord} = useGenerateRecordStore()
+  const {sendStudentRecord, generateState} = useGenerateRecordStore()
 
   useEffect(() => {
     if (subjectId && subjectTitle) {
@@ -57,7 +58,8 @@ export default function ViewParticularSubject() {
       <div className="admin-container mt-5">
         <div className="container">
           <div className="card border-0 shadow-sm">
-            <div className="card-body">
+            {
+              !generateState ?             <div className="card-body">
               {/* Header Section */}
               <div className="d-flex justify-content-between align-items-start mb-4">
                 <div>
@@ -197,7 +199,7 @@ export default function ViewParticularSubject() {
                           <td>{subjectTitle}</td>
                           <td>
                             {student.score !== undefined
-                              ? `${student.score}%`
+                              ? `${student.score}/${student.total}`
                               : "—"}
                           </td>
                         </tr>
@@ -212,7 +214,8 @@ export default function ViewParticularSubject() {
                   </tbody>
                 </table>
               </div>
-            </div>
+            </div>: <Spinner message="generating excel file"/> 
+            }
           </div>
         </div>
       </div>

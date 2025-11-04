@@ -46,7 +46,7 @@ async function requestStudentInfo({ token }: { token: string }) {
     url: AllServerUrls.getStudentInfoUrl,
     token,
   });
-  console.log("Fetched student info:", res.data);
+
 
   return res.data;
 }

@@ -286,7 +286,7 @@ async function requestTimer({
 async function requestQuestions({ token, subjectId }: { token: string, subjectId: string }) {
   var res = await DefaultRequestSetUp.get<QuestionModel[]>({ url: `${AllServerUrls.getAllQuestion}?subject_id=${subjectId}`, token: token })
 
-  console.log(res)
+  
   if (res.statusCode === 500) {
     useNotificationStore.getState().showNotification(res.message, "error")
     return null
@@ -299,7 +299,6 @@ async function requestQuestions({ token, subjectId }: { token: string, subjectId
 
 async function requestProceedExam({token, data}:{token:string, data:ProceedExam}) {
   var res = await DefaultRequestSetUp.post<ProceedExam, boolean>({url:AllServerUrls.checkProceedExam, token:token, data:data})
-  console.log(res)
   if(res.statusCode === 400){
     useNotificationStore.getState().showNotification(res.message, "error")
   

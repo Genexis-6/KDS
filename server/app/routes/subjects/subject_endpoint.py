@@ -43,7 +43,7 @@ async def get_all_subject(
 
 
 @subject_endpoint.post("/add_subject", response_model=DefaultServerApiRes[str])
-async def add_subject(db: db_injection, add: AddNewSubjectSchemas):
+async def add_subject(db: db_injection, add: AddNewSubjectSchemas, current_user:Annotated[dict, Depends(verify_token)] ):
     sub_query = AllSubjectQueries(db)
     result = await sub_query.add_new_subject(add)
 
@@ -72,6 +72,7 @@ async def add_subject(db: db_injection, add: AddNewSubjectSchemas):
 
 @subject_endpoint.get("/{subject_id}/{subject_title}", response_model=DefaultServerApiRes[SubjectFullInfo])
 async def get_full_subject_info(
+    current_user:Annotated[dict, Depends(verify_token)] ,
     subject_id: UUID,
     subject_title: str,
     db: db_injection
@@ -97,7 +98,7 @@ async def get_full_subject_info(
 
 
 @subject_endpoint.post("/generate_record", response_model=DefaultServerApiRes[bool])
-async def generate_record(gen:StudentScoreRecord):
+async def generate_record(gen:StudentScoreRecord, current_user:Annotated[dict, Depends(verify_token)] ):
     status = generate_excel_record(gen)
     if not status:
         return JSONResponse(

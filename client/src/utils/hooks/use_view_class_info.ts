@@ -89,6 +89,6 @@ async function requestClassViewInfoData({
       res.statusCode === 404 ? "error" : "info"
     );
 
-  console.log("Fetched from server:", res.data);
+  
   return res.data;
 }

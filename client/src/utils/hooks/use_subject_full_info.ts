@@ -10,6 +10,7 @@ export interface StudentSubInfo {
   studentName: string;
   identifier: number;
   score: number;
+  total:number
 }
 
 export interface TimerInfo {
@@ -54,7 +55,6 @@ export const useFullSubjectStore = create<UseFullSubject>((set) => ({
         url: `${AllServerUrls.subjects}/${subjectId}/${subjectTitle}`,
         token: token!,
       });
-      console.log(res.data)
       if (res.statusCode === 200) {
         set({ subjectData: res.data });
       } else {

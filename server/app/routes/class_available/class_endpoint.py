@@ -1,5 +1,5 @@
 from uuid import UUID
-from fastapi import APIRouter, Query
+from fastapi import APIRouter, Depends, Query
 from fastapi.responses import JSONResponse
 from app.repo.schemas.default_server_res import DefaultServerApiRes
 from app.repo import db_injection
@@ -8,6 +8,7 @@ from app.repo.schemas.class_schemas.add_new_class_schemas import AddNewClassSche
 from app.utils.enums.class_room_enums import ClassRoomEnums
 from typing import Annotated, List
 from app.repo.schemas.class_schemas.class_schemas import ClassFullDetails, ClassSchemas
+from app.security.token_generator import verify_token
 
 
 
@@ -23,7 +24,7 @@ room = APIRouter(
 
 
 @room.get("/all_classess", response_model=DefaultServerApiRes[List[ClassSchemas]])
-async def get_all_available_class(db: db_injection):
+async def get_all_available_class(db: db_injection, current_user:Annotated[dict, Depends(verify_token)] ):
     class_ =  ClassQueries(db)
     all_classes = await class_.get_all_classes()
     return DefaultServerApiRes(
@@ -35,7 +36,7 @@ async def get_all_available_class(db: db_injection):
   
 
 @room.post("/add_class", response_model=DefaultServerApiRes)
-async def add_new_class(db: db_injection, add:AddNewClassSchemas):
+async def add_new_class(db: db_injection, add:AddNewClassSchemas, current_user:Annotated[dict, Depends(verify_token)] ):
     class_ =  ClassQueries(db)
     add_class = await class_.add_new_class(add)
     if add_class == ClassRoomEnums.EXIST:
@@ -50,7 +51,7 @@ async def add_new_class(db: db_injection, add:AddNewClassSchemas):
     
     
 @room.delete("/delete_class", response_model=DefaultServerApiRes)
-async def delete_class(db: db_injection, className: Annotated[str, Query(..., description="class id")]):
+async def delete_class(db: db_injection, className: Annotated[str, Query(..., description="class id")], current_user:Annotated[dict, Depends(verify_token)] ):
     class_ =  ClassQueries(db)
     delete_class = await class_.delete_class(className)
     if delete_class == ClassRoomEnums.NOT_FOUND:
@@ -66,7 +67,7 @@ async def delete_class(db: db_injection, className: Annotated[str, Query(..., de
     
 
 @room.get("/get_class_full_info", response_model=DefaultServerApiRes[ClassFullDetails])
-async def get_class_full_info(db:db_injection, className: Annotated[str, Query(..., description="class id")]):
+async def get_class_full_info(db:db_injection, className: Annotated[str, Query(..., description="class id")], current_user:Annotated[dict, Depends(verify_token)] ):
     class_ = ClassQueries(db)
     full_info = await class_.get_class_full_info(className)
     

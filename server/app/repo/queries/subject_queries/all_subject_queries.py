@@ -98,7 +98,8 @@ class AllSubjectQueries:
                 StudentSubInfo(
                     studentName=score.student.full_name,
                     identifier=score.student.identifier,
-                    score=score.score,
+                    score=score.correct_answers,
+                    total=score.total_questions
                 )
                 for score in subject.scores
             ]

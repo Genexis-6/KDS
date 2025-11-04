@@ -43,7 +43,9 @@ async def get_timer_by_id(db: db_injection, subject_id: Annotated[UUID, Query(..
 
 
 @timer_endpoint.post("/set_timer", response_model=DefaultServerApiRes[AddNewTimerSchemas])
-async def add_new_timer(db: db_injection, add: AddNewTimerSchemas):
+async def add_new_timer(db: db_injection, 
+                        current_user:Annotated[dict, Depends(verify_token)] ,
+                        add: AddNewTimerSchemas):
     timer = TimerQueries(db)
     add_timer = await timer.add_timer(add)
 

@@ -53,7 +53,6 @@ export const useCurrentUserStore = create<useCurrentUserParam>((set) => ({
 }));
 
 async function getCurrentUser(token?: string) {
-  console.log(`token ${token}`);
   const res = await DefaultRequestSetUp.get<currentUser>({
     url: AllServerUrls.currentUser,
     token: token,

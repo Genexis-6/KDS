@@ -7,7 +7,7 @@ from typing import Annotated
 
 from app.utils.enums.auth_enums import AuthEums
 from app.repo.queries.students.student_quires import StudentQueries
-from app.repo.schemas.student_schemas.add_new_student_schemas import StudentInfoSchemas
+from app.repo.schemas.student_schemas.add_new_student_schemas import ChangePasswordBody, StudentInfoSchemas
 
 
 student_endpoint = APIRouter(
@@ -44,4 +44,23 @@ async def get_student_info(db: db_injection, current_user:Annotated[dict, Depend
         statusCode=200,
         message="student info",
         data=student_info
+    )
+    
+    
+
+@student_endpoint.put("/change_password", response_model=DefaultServerApiRes[bool])
+async def change_password(body: ChangePasswordBody, db: db_injection, current_user:Annotated[dict, Depends(verify_token)] ):
+    query = StudentQueries(db)
+    result = await query.update_password(body.studentId, body.newPassword)
+
+    if result != AuthEums.OK:
+        return JSONResponse(
+            status_code=404,
+            content="Failed to update password"
+        )
+
+    return DefaultServerApiRes(
+        statusCode=200,
+        message="Password updated successfully.",
+        data=True
     )

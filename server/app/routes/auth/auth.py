@@ -68,7 +68,7 @@ async def login_user(db: db_injection, login: LoginUserSchemas, response: Respon
 
 
 @auth.post("/register", response_model=DefaultServerApiRes, )
-async def create_new_student(db: db_injection, add: AddNewStudentSchemas):
+async def create_new_student(db: db_injection, add: AddNewStudentSchemas, current_user:Annotated[dict, Depends(verify_token)] ):
     user = AuthQueries(db)
     reg_user = await user.add_new_student(add)
     if reg_user == AuthEums.EXISTS:

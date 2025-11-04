@@ -53,6 +53,6 @@ async function requestAllSubjects({
     token,
   });
 
-  console.log("Fetched subjects:", res.data);
+
   return res.data;
 }

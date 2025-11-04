@@ -46,7 +46,7 @@ export default function ExamPreParation() {
             }
         }, [isTimerRunning]
     )
-  console.log(allAvaliableQuestions)
+
   return (
     <div className="exam-container mt-4">
       {/* Header Section */}

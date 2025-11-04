@@ -14,21 +14,15 @@ import PopupMenu from "./common/component/PopUpMenu";
 function App() {
 
   const {
-    isAuthenticated, checkIsAuthenticated
+ checkIsAuthenticated
   } = useIsAuthenticatedStore()
 
-
-  const { token } = useAuthTokenStore()
-  const { user } = useCurrentUserStore()
   useEffect(
     () => {
       checkIsAuthenticated()
 
     }, []
   )
-  console.log(isAuthenticated)
-  console.log(user)
-  console.log(token)
 
   return (
     <>

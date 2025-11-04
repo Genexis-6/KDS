@@ -3,7 +3,7 @@
 import { Outlet, Link } from "react-router-dom";
 import { useCurrentUserStore } from "../../utils/hooks/use_current_user";
 import HandleLogout from "../viewModel/handle_logout";
-import { AppUrl } from "../routes/app_urls";
+// import { AppUrl } from "../routes/app_urls";
 
 export default function NavbarLayout() {
   const { user } = useCurrentUserStore();
@@ -36,7 +36,7 @@ export default function NavbarLayout() {
           {/* Collapsible Menu */}
           <div className="collapse navbar-collapse" id="navbarContent">
             <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-              {
+              {/* {
                 user?.role === "admin" && <li className="nav-item">
                   <Link className="nav-link text-dark" to={AppUrl.adminPath}>
                     All class
@@ -63,7 +63,7 @@ export default function NavbarLayout() {
                     Register student
                   </Link>
                 </li>
-              }
+              } */}
             </ul>
 
             {/* Right Side: User + Logout */}

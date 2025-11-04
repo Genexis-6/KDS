@@ -8,6 +8,13 @@ type postParams<T> = {
   token?: string
 }
 
+type putParams<T> = {
+  url: string
+  contentType?: string
+  data: T
+  token?: string
+}
+
 type getParams = {
   url: string
   contentType?: string
@@ -33,6 +40,7 @@ export class DefaultRequestSetUp {
     return headers
   }
 
+  // 🔹 POST
   static async post<TModel, TRes>({
     url,
     contentType = "application/json",
@@ -42,7 +50,6 @@ export class DefaultRequestSetUp {
     const { showNotification } = useNotificationStore.getState()
     try {
       const isFormData = data instanceof FormData
-
       const headers = DefaultRequestSetUp.headerType({
         contentType,
         token,
@@ -56,11 +63,10 @@ export class DefaultRequestSetUp {
         body: isFormData ? (data as any) : JSON.stringify(data),
       })
 
-      const resData = (await res.json()) as any
+      const resData = await res.json()
 
-      if (!res.ok) {
+      if (!res.ok)
         showNotification(resData.detail || "Error making this request", "error")
-      }
 
       return {
         ...(resData as object),
@@ -76,6 +82,7 @@ export class DefaultRequestSetUp {
     }
   }
 
+  // 🔹 GET
   static async get<TRes>({
     url,
     contentType = "application/json",
@@ -86,17 +93,13 @@ export class DefaultRequestSetUp {
       const res = await fetch(url, {
         method: "GET",
         credentials: "include",
-        headers: DefaultRequestSetUp.headerType({
-          contentType,
-          token,
-        }),
+        headers: DefaultRequestSetUp.headerType({ contentType, token }),
       })
 
-      const resData = (await res.json()) as any
+      const resData = await res.json()
 
-      if (!res.ok) {
+      if (!res.ok)
         showNotification(resData.detail || "Error making this request", "error")
-      }
 
       return {
         ...(resData as object),
@@ -111,6 +114,49 @@ export class DefaultRequestSetUp {
     }
   }
 
+ 
+  static async put<TModel, TRes>({
+    url,
+    contentType = "application/json",
+    data,
+    token,
+  }: putParams<TModel>): Promise<DefaultServerRes<TRes>> {
+    const { showNotification } = useNotificationStore.getState()
+    try {
+      const isFormData = data instanceof FormData
+      const headers = DefaultRequestSetUp.headerType({
+        contentType,
+        token,
+        skipContentType: isFormData,
+      })
+
+      const res = await fetch(url, {
+        method: "PUT",
+        credentials: "include",
+        headers,
+        body: isFormData ? (data as any) : JSON.stringify(data),
+      })
+
+      const resData = await res.json()
+
+      if (!res.ok)
+        showNotification(resData.detail || "Error making this request", "error")
+
+      return {
+        ...(resData as object),
+        statusCode: resData.status_code ?? res.status,
+        message: resData.message ?? resData.detail ?? "",
+      } as DefaultServerRes<TRes>
+    } catch (e) {
+      showNotification(
+        "Error communicating with server... call technical team",
+        "error"
+      )
+      throw e
+    }
+  }
+
+  // 🔹 DELETE
   static async delete<TModel, TRes>({
     url,
     data,
@@ -126,11 +172,10 @@ export class DefaultRequestSetUp {
         body: data ? JSON.stringify(data) : undefined,
       })
 
-      const resData = (await res.json()) as any
+      const resData = await res.json()
 
-      if (!res.ok) {
+      if (!res.ok)
         showNotification(resData.detail || "Error performing delete", "error")
-      }
 
       return {
         ...(resData as object),

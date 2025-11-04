@@ -43,6 +43,7 @@ class StudentSubInfo(BaseModel):
     studentName: str
     identifier: str
     score: float
+    total:int
 
 class SubjectFullInfo(BaseModel):
     timer: Optional["AddNewTimerSchemas"] = None
