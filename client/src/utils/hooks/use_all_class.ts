@@ -13,7 +13,7 @@ export const useAllClassStore = create<useAllClassStoreParam>((set) => (
     {
         allClass: [], getLatestUpdate: async () => {
             const dt = await HandleClassRequests.getAllClass();
-            set({ allClass: dt })
+            set({ allClass: dt! })
         }
     }
 ))

@@ -4,6 +4,7 @@ import { AllServerUrls } from "../http/all_server_url";
 import { useAuthTokenStore } from "./use_auth_token_store";
 import { useNotificationStore } from "./use_notification_store";
 import type { TimerModel } from "../../common/model/classModels/timer_model";
+import { useIsAuthenticatedStore } from "./use_is_authenticated_store";
 
 // ---- Types ---- //
 export interface StudentSubInfo {
@@ -46,7 +47,9 @@ export const useFullSubjectStore = create<UseFullSubject>((set) => ({
   getSubjectFullInfo: async (subjectId, subjectTitle) => {
     const { token } = useAuthTokenStore.getState();
     const { showNotification } = useNotificationStore.getState();
+    const {isAuthenticated} = useIsAuthenticatedStore.getState()
 
+    if(!isAuthenticated) return console.warn("user not authenticated")
 
     set({ isLoading: true });
 

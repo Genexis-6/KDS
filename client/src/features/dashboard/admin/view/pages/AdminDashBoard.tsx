@@ -6,18 +6,28 @@ import { useClassCreationStore } from "../../../../../utils/hooks/use_class_crea
 import { useAllClassStore } from "../../../../../utils/hooks/use_all_class";
 import { usePopupStore } from "../../../../../utils/hooks/use_pop_up_menu";
 import AllAvailableClass from "../components/AllAvailbleClassBody";
+import { useIsAuthenticatedStore } from "../../../../../utils/hooks/use_is_authenticated_store";
+import { useAuthTokenStore } from "../../../../../utils/hooks/use_auth_token_store";
 
 
 export default function AdminDashBoard() {
   const { inProgress, setProgress } = useClassCreationStore();
   const { allClass, getLatestUpdate } = useAllClassStore()
   const { openPopup, closePopup } = usePopupStore()
+  const {isAuthenticated} = useIsAuthenticatedStore()
+  const {token} = useAuthTokenStore()
 
   useEffect(() => {
     setProgress(false);
-    getLatestUpdate().then()
-
   }, []);
+
+  useEffect(
+    ()=>{
+      if(isAuthenticated && token){
+          getLatestUpdate().then()
+      }
+    }, [isAuthenticated, token]
+  )
 
   return (
     <div className="container">

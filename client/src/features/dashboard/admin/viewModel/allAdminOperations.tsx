@@ -14,7 +14,7 @@ import { useIsAuthenticatedStore } from "../../../../utils/hooks/use_is_authenti
 import type { AddNewStudentForm } from "../view/components/AddNewStudentToClass"
 import { useLoadingStore } from "../../../../utils/hooks/use_loading_state"
 import type { UploadExmaExcelForm } from "../view/components/UploadStudentQuestion"
-import type { StudentSubInfo } from "../../../../utils/hooks/use_subject_full_info"
+
 
 type addClassType<T extends ClassFormValues> = {
   data: T
@@ -224,18 +224,21 @@ export class AllAdminOperation {
   }
 
   static async deleteQuestions({ subjectId }: { subjectId: string }) {
-    var res = await DefaultRequestSetUp.delete<void, boolean>({ url: `${AllServerUrls.deleteQuestion}?subjectId=${subjectId}` })
+    const {token} = useAuthTokenStore.getState()
+    var res = await DefaultRequestSetUp.delete<void, boolean>({ url: `${AllServerUrls.deleteQuestion}?subjectId=${subjectId}`, token:token! })
     useNotificationStore.getState().showNotification(res.message, res.statusCode === 200 ? "success" : "info")
     return res.data
   }
 
 
   static async updateStudentPassword(studentId: string, newPassword: string) {
+    const {token} = useAuthTokenStore.getState()
     const res = await DefaultRequestSetUp.put<
       { studentId: string; newPassword: string },
       boolean
     >({
       url: AllServerUrls.updateStudentPassword,
+      token:token!,
       data: { studentId: studentId, newPassword: newPassword },
     })
     useNotificationStore.getState().showNotification(res.message, res.statusCode == 200 ? "success" : "info")
