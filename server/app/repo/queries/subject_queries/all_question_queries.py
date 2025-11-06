@@ -36,7 +36,7 @@ class AllQuestionQueries:
 
         except Exception as e:
             await self.session.rollback()
-            print("❌ add_question error:", e)
+            print(" add_question error:", e)
             return AuthEums.ERROR
         
     async def get_only_id_and_answer(self, subject_id:UUID):
@@ -81,5 +81,5 @@ class AllQuestionQueries:
             return AuthEums.OK
         except Exception as e:
             await self.session.rollback()
-            print("❌ clear_old_question error:", e)
+            print(" clear_old_question error:", e)
             return AuthEums.ERROR

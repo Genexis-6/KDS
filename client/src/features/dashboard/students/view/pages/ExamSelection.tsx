@@ -9,6 +9,7 @@ import { useNavigationStore } from "../../../../../utils/hooks/use_navigation_st
 import { AppUrl } from "../../../../../common/routes/app_urls";
 import { useSelectedExam } from "../../../../../utils/hooks/use_selected_exam";
 import { useStudentInfoStore } from "../../../../../utils/hooks/use_student_info_store";
+import { useAuthTokenStore } from "../../../../../utils/hooks/use_auth_token_store";
 
 
 export default function ExamSelection() {
@@ -16,9 +17,11 @@ export default function ExamSelection() {
   const { isTimerRunning } = useSelectedExam();
   const { navigate } = useNavigationStore();
   const { student } = useStudentInfoStore();
+  const {getAcessToken} = useAuthTokenStore()
 
   useEffect(() => {
     useStudentAnswers.getState().clearAnswers();
+    getAcessToken().then()
   }, []);
 
   useEffect(() => {

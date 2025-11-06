@@ -92,7 +92,7 @@ async def get_questions(
             data=questions
         )
     except Exception as e:
-        print("❌ Error fetching questions:", e)
+        print("Error fetching questions:", e)
         return JSONResponse(
             content={"message":"error while getting questions"},
             status_code=500,

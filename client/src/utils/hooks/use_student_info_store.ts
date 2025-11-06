@@ -10,6 +10,7 @@ type UseStudentInfo = {
   student: StudentModels | null;
   setStudentInfo: (student: StudentModels) => void;
   getStudentInfo: () => Promise<void>;
+  clearStudentInfo: () => void
 };
 
 export const useStudentInfoStore = create<UseStudentInfo>((set, get) => ({
@@ -38,6 +39,9 @@ export const useStudentInfoStore = create<UseStudentInfo>((set, get) => ({
       console.error("Failed to fetch student info:", err);
     }
   },
+  clearStudentInfo: () => {
+    set({ student: null })
+  }
 }));
 
 async function requestStudentInfo({ token }: { token: string }) {

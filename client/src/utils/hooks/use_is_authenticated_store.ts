@@ -87,10 +87,11 @@ export const useIsAuthenticatedStore = create<UseIsAuthenticatedParams>((set, ge
     sessionStorage.removeItem(KEY);
 
     // Reset other stores
-    const { setToken } = useAuthTokenStore.getState();
+    const { setToken, clearToken } = useAuthTokenStore.getState();
     const { setUser } = useCurrentUserStore.getState();
     setToken(null as any);
     setUser(null as any);
+    clearToken()
 
 
   },

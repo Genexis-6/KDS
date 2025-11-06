@@ -9,19 +9,22 @@ type useAuthTokenParam = {
     token?: string | null,
     setToken: (newToken: string) => void,
     getAcessToken: () => Promise<void>
+    clearToken: () => void
 }
 
 
 export const useAuthTokenStore = create<useAuthTokenParam>(
-    (set, get) => ({
+    (set) => ({
         token: null,
         setToken: (newToken) => {
             set({ token: newToken })
         },
         getAcessToken: async () => {
-            if (get().token !== null) return;
             var newToken = await getNewToken()
             set({ token: newToken });
+        },
+        clearToken: () => {
+            set({ token: null })
         }
     })
 )

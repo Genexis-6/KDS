@@ -49,9 +49,9 @@ def generate_excel_record(data: StudentScoreRecord) -> bool:
             # Write student score records below the class info
             df.to_excel(writer, sheet_name="Record", index=False, startrow=4)
 
-        print(f"✅ Excel file generated successfully at: {filepath}")
+        print(f" Excel file generated successfully at: {filepath}")
         return True
 
     except Exception as e:
-        print(f"❌ Error generating Excel file: {e}")
+        print(f" Error generating Excel file: {e}")
         return False

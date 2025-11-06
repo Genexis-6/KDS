@@ -1,26 +1,59 @@
 'use client';
 
+import { useEffect, useState } from "react";
 import { Outlet, Link } from "react-router-dom";
 import { useCurrentUserStore } from "../../utils/hooks/use_current_user";
 import HandleLogout from "../viewModel/handle_logout";
-// import { AppUrl } from "../routes/app_urls";
 
 export default function NavbarLayout() {
   const { user } = useCurrentUserStore();
 
+  const [canGoBack, setCanGoBack] = useState(false);
 
+  useEffect(() => {
+    // Check if there is history to go back to
+    setCanGoBack(window.history.length > 1);
+  }, []);
+
+  const handleBack = () => {
+    if (canGoBack) {
+      window.history.back();
+    }
+  };
+
+  const handleReload = () => {
+    window.location.reload();
+  };
 
   return (
     <>
-      {/* Navbar */}
       <nav className="navbar navbar-expand-lg bg-white shadow-sm border-bottom">
         <div className="container-fluid">
+
+          {/* Back Button */}
+          {canGoBack && (
+            <button
+              onClick={handleBack}
+              className="btn btn-outline-secondary me-2"
+            >
+              ← Back
+            </button>
+          )}
+
+          {/* Reload Button */}
+          <button
+            onClick={handleReload}
+            className="btn btn-outline-secondary me-2"
+          >
+            ⟳ Reload
+          </button>
+
           {/* Brand */}
           <Link className="navbar-brand fw-bold text-primary" to="/">
             GENE-XX
           </Link>
 
-          {/* Mobile Toggle Button */}
+          {/* Mobile Toggle */}
           <button
             className="navbar-toggler"
             type="button"
@@ -36,41 +69,14 @@ export default function NavbarLayout() {
           {/* Collapsible Menu */}
           <div className="collapse navbar-collapse" id="navbarContent">
             <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-              {/* {
-                user?.role === "admin" && <li className="nav-item">
-                  <Link className="nav-link text-dark" to={AppUrl.adminPath}>
-                    All class
-                  </Link>
-                </li>
-              }
-              {
-                user?.role === "admin" && <li className="nav-item">
-                  <Link className="nav-link text-dark" to="/dashboard">
-                    Setup Exam
-                  </Link>
-                </li>
-              }
-              {
-                user?.role === "admin" && <li className="nav-item">
-                  <Link className="nav-link text-dark" to="/dashboard">
-                    View all Student
-                  </Link>
-                </li>
-              }
-              {
-                user?.role === "admin" && <li className="nav-item">
-                  <Link className="nav-link text-dark" to="/dashboard">
-                    Register student
-                  </Link>
-                </li>
-              } */}
+              {/* Add nav items here */}
             </ul>
 
-            {/* Right Side: User + Logout */}
             <div className="d-flex align-items-center gap-3">
               {user && (
                 <span className="text-dark small bg-light px-3 py-1 rounded-pill border">
-                  <b>{user.role === "admin" && `Admin: `}</b>{user.fullName}
+                  <b>{user.role === "admin" && `Admin: `}</b>
+                  {user.fullName}
                 </span>
               )}
               <button
@@ -84,7 +90,6 @@ export default function NavbarLayout() {
         </div>
       </nav>
 
-      {/* Page Content */}
       <main>
         <Outlet />
       </main>
